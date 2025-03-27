@@ -2,6 +2,10 @@ import pandas as pd
 from set_treatment import *
 from settings import *
 
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', 1000)
+
 gender_list = {
     'female': 0,
     'male': 1,
@@ -9,7 +13,7 @@ gender_list = {
 }
 
 # Number of requests
-ITERATION = 700
+ITERATION = 800
 
 # __init__.py (Last Page)
 

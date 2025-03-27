@@ -2,7 +2,7 @@
 
 This repository provides an implementation of treatment assignment functions based on quotas to ensure balanced participant distribution across different treatment groups in experimental sessions. The code supports multiple quota types (total, gender-based, and gender-age-based) and updates dynamically based on real-time participant data.
 ## Usage
-- Add ```set_treatment.py``` to the project folder.
+- Add ```set_treatment.py``` to the ```_static``` folder.
 - Define ```DONE_TREATMENTS``` in ```settings.py``` and add it to ```SESSION_CONFIGS``` under the ```done_treatments``` key:
 ```python
 # settings.py
@@ -21,18 +21,25 @@ SESSION_CONFIGS = [
         done_treatments=DONE_TREATMENTS,
     ),
 ]
+
+
 ```
 - Define ```MAX_TREATMENTS1``` (or ```MAX_TREATMENTS2``` or ```MAX_TREATMENTS3```) in the ```C``` (Constants) class.
-- Initialize ```done_treatments``` in the session variable:
+- Initialize ```done_treatments``` in the session variable and add it to ```SESSION_FIELDS```:
 ```python
 # __init__.py
 def creating_session(subsession: Subsession):
     if subsession.round_number == 1:
         subsession.session.done_treatments = subsession.session.config['done_treatments']
+
+# settings.py
+SESSION_FIELDS = ['done_treatments']
 ```
-- Assign treatment (make sure to ask for age and gender beforehand, if required)
+- Assign treatment (make sure to ask for age and gender beforehand, if required) and add ```age```, ```gender```, and ```treatment``` to ```PARTICIPANT_FIELDS```.
 ```python
 # __init__.py
+from _static.set_treatment import *
+
 class Treatment(Page):
 
     @staticmethod
@@ -46,6 +53,9 @@ class Treatment(Page):
             player.participant.gender, 
             player.participant.age
         )
+
+# settings.py
+PARTICIPANT_FIELDS = ['age', 'gender', 'treatment']
 ```
 - Update ```done_treatments``` after each participant completes the study:
 
